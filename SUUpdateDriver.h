@@ -29,6 +29,8 @@ extern NSString * const SUUpdateDriverFinishedNotification;
 - (void)abortUpdate;
 - (BOOL)isInterruptible;
 - (BOOL)finished;
+- (SUHost*)host;
+- (void)setHost:(SUHost*)newHost;
 
 @end
 

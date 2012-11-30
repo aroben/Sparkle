@@ -44,4 +44,15 @@ NSString * const SUUpdateDriverFinishedNotification = @"SUUpdateDriverFinished";
     [super dealloc];
 }
 
+- (SUHost*)host
+{
+    return host;
+}
+
+- (void)setHost:(SUHost*)newHost
+{
+    [host release];
+    host = [newHost retain];
+}
+
 @end
