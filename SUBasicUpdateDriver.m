@@ -248,6 +248,11 @@
 	}
 	CFRetain(unarchiver); // Manage this memory manually so we don't have to make it an IV.
 	[unarchiver setDelegate:self];
+
+	if ([[updater delegate] respondsToSelector:@selector(updater:willExtractUpdate:)]) {
+		[[updater delegate] updater:updater willExtractUpdate:updateItem];
+	}
+
 	[unarchiver start];
 }
 
@@ -279,9 +284,13 @@
 	[self abortUpdateWithError:[NSError errorWithDomain:SUSparkleErrorDomain code:SUUnarchivingError userInfo:[NSDictionary dictionaryWithObject:SULocalizedString(@"An error occurred while extracting the archive. Please try again later.", nil) forKey:NSLocalizedDescriptionKey]]];
 }
 
-- (BOOL)shouldInstallSynchronously { return NO; }
-
 - (void)installWithToolAndRelaunch:(BOOL)relaunch
+{
+	// Perhaps a poor assumption but: if we're not relaunching, we assume we shouldn't be showing any UI either. Because non-relaunching installations are kicked off without any user interaction, we shouldn't be interrupting them.
+	[self installWithToolAndRelaunch:relaunch displayingUserInterface:relaunch];
+}
+
+- (void)installWithToolAndRelaunch:(BOOL)relaunch displayingUserInterface:(BOOL)showUI
 {
 #if !ENDANGER_USERS_WITH_INSECURE_UPDATES
     if (![self validateUpdateDownloadedToPath:downloadPath extractedToPath:tempDir DSASignature:[updateItem DSASignature] publicDSAKey:[host publicDSAKey]])
@@ -347,7 +356,14 @@
     if ([[updater delegate] respondsToSelector:@selector(pathToRelaunchForUpdater:)])
         pathToRelaunch = [[updater delegate] pathToRelaunchForUpdater:updater];
     NSString *relaunchToolPath = [relaunchPath stringByAppendingPathComponent: @"/Contents/MacOS/finish_installation"];
-    [NSTask launchedTaskWithLaunchPath: relaunchToolPath arguments:[NSArray arrayWithObjects:[host bundlePath], pathToRelaunch, [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]], tempDir, relaunch ? @"1" : @"0", nil]];
+    [NSTask launchedTaskWithLaunchPath: relaunchToolPath arguments:[NSArray arrayWithObjects:
+																	[host bundlePath],
+																	pathToRelaunch,
+																	[NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]],
+																	tempDir,
+																	relaunch ? @"1" : @"0",
+																	showUI ? @"1" : @"0",
+																	nil]];
 
     [NSApp terminate:self];
 }
