@@ -107,6 +107,9 @@
 // Sent when a valid update is not found.
 - (void)updaterDidNotFindUpdate:(SUUpdater *)update;
 
+// Sent immediately before extracting the specified update.
+- (void)updater:(SUUpdater *)updater willExtractUpdate:(SUAppcastItem *)update;
+
 // Sent immediately before installing the specified update.
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update;
 

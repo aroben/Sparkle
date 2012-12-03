@@ -248,6 +248,11 @@
 	}
 	CFRetain(unarchiver); // Manage this memory manually so we don't have to make it an IV.
 	[unarchiver setDelegate:self];
+
+	if ([[updater delegate] respondsToSelector:@selector(updater:willExtractUpdate:)]) {
+		[[updater delegate] updater:updater willExtractUpdate:updateItem];
+	}
+
 	[unarchiver start];
 }
 
