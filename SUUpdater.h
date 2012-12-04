@@ -107,6 +107,9 @@
 // Sent when a valid update is not found.
 - (void)updaterDidNotFindUpdate:(SUUpdater *)update;
 
+// Sent immediately before extracting the specified update.
+- (void)updater:(SUUpdater *)updater willExtractUpdate:(SUAppcastItem *)update;
+
 // Sent immediately before installing the specified update.
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update;
 
@@ -137,6 +140,11 @@
 //	the opportunity to hide attached windows etc. that may get in the way:
 -(void)	updaterWillShowModalAlert:(SUUpdater *)updater;
 -(void)	updaterDidShowModalAlert:(SUUpdater *)updater;
+
+// Called when an update is scheduled to be silently installed on quit.
+// The invocation can be used to trigger an immediate silent install and relaunch.
+- (void)updater:(SUUpdater *)updater willInstallUpdateOnQuit:(SUAppcastItem *)update immediateInstallationInvocation:(NSInvocation *)invocation;
+- (void)updater:(SUUpdater *)updater didCancelInstallUpdateOnQuit:(SUAppcastItem *)update;
 
 @end
 
