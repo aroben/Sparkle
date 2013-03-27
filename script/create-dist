@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+cd "$(dirname "$0")/.."
+SOURCE_ROOT="$(pwd -P)"
+
+cd build/Release
+zip --symlinks -r "${SOURCE_ROOT}/Sparkle.zip" Sparkle.framework

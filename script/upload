@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+(
+  test -z "${SPARKLE_S3_BUCKET}" ||
+  test -z "${SPARKLE_S3_ACCESS_KEY}" ||
+  test -z "${SPARKLE_S3_SECRET_KEY}"
+) && {
+  echo >&2 "Error: Please set the \$SPARKLE_S3_BUCKET, \$SPARKLE_S3_ACCESS_KEY, and \$SPARKLE_S3_SECRET_KEY environment variables"
+  exit 1
+}
+
+s3put --help | grep multipart > /dev/null 2>&1 || {
+  echo >&2 "Error: Please install boto and filechunkio"
+  exit 1
+}
+
+cd "$(dirname $0)/.."
+SOURCE_ROOT="$(pwd -P)"
+
+COMMIT=$(git rev-parse HEAD)
+
+s3put \
+  --bucket "${SPARKLE_S3_BUCKET}" \
+  --access_key "${SPARKLE_S3_ACCESS_KEY}" \
+  --secret_key "${SPARKLE_S3_SECRET_KEY}" \
+  --prefix "${SOURCE_ROOT}" \
+  --key_prefix sparkle/${COMMIT} \
+  --grant public-read \
+  --multipart \
+  Sparkle.zip
