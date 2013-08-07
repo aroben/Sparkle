@@ -1360,6 +1360,7 @@
 			baseConfigurationReference = FA1941CA0D94A70100DD942E /* ConfigFrameworkDebug.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1368,6 +1369,7 @@
 			baseConfigurationReference = FA1941D50D94A70100DD942E /* ConfigFrameworkRelease.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1404,6 +1406,7 @@
 					AppKit,
 				);
 				PRODUCT_NAME = finish_installation;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1427,6 +1430,7 @@
 					AppKit,
 				);
 				PRODUCT_NAME = finish_installation;
+				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};
 			name = Release;
